@@ -1,4 +1,9 @@
-import { Project } from '@Projects/entities'
+import { IsString } from 'class-validator'
 
-export interface CreateProjectDto
-  extends Omit<Project, 'id' | 'user' | 'createdAt' | 'tasks'> {}
+export class CreateProjectDto {
+  @IsString()
+  title: string
+
+  @IsString()
+  description: string
+}
