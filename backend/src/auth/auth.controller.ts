@@ -1,5 +1,5 @@
 import { AuthService } from '@Auth/auth.service'
-import { loginRequestDto, RegisterUserDto } from '@Auth/dto'
+import { loginRequestDto, RegisterDto } from '@Auth/dto'
 import { LocalAuthGuard } from '@Auth/local-auth.guard'
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common'
 
@@ -14,7 +14,7 @@ export class AuthController {
   }
 
   @Post('/register')
-  async register(@Body() registerUserDto: RegisterUserDto) {
+  async register(@Body() registerUserDto: RegisterDto) {
     return this.authService.register(registerUserDto)
   }
 }

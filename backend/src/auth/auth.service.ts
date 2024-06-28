@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import bcrypt from 'bcrypt'
 
-import { RegisterUserDto } from '@Auth/dto'
+import { RegisterDto } from '@Auth/dto'
 import { SafeUser, UserJwtTokenPayload } from '@Auth/models'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '@Users/entities'
@@ -45,7 +45,7 @@ export class AuthService {
     }
   }
 
-  async register(registerUserDto: RegisterUserDto) {
+  async register(registerUserDto: RegisterDto) {
     const userExists = await this.usersRepository.findOneBy({
       username: registerUserDto.username,
     })
