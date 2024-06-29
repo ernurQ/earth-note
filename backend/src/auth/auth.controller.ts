@@ -25,6 +25,7 @@ import {
   RegisterResponseDto,
 } from '@Auth/dto'
 import { LocalAuthGuard } from '@Auth/local-auth.guard'
+import { plainToInstance } from 'class-transformer'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -53,6 +54,7 @@ export class AuthController {
   @ApiConflictResponse({ description: 'Username already exists' })
   @Post('/register')
   async register(@Body() registerUserDto: RegisterDto) {
-    return this.authService.register(registerUserDto)
+    const newUser = await this.authService.register(registerUserDto)
+    return plainToInstance(RegisterResponseDto, newUser)
   }
 }
