@@ -44,7 +44,8 @@ export class AuthController {
   @Post('/login')
   @HttpCode(200)
   async login(@Req() req: loginRequestDto) {
-    return this.authService.login(req.user)
+    const loginResponse = await this.authService.login(req.user)
+    return plainToInstance(LoginResponseDto, loginResponse)
   }
 
   @ApiBody({ type: RegisterDto })
