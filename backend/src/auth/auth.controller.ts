@@ -21,6 +21,7 @@ import { AuthService } from '@Auth/auth.service'
 import {
   LoginDto,
   loginRequestDto,
+  LoginResponseDto,
   RegisterDto,
   RegisterResponseDto,
 } from '@Auth/dto'
@@ -33,7 +34,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiBody({ type: LoginDto })
-  @ApiOkResponse({ description: 'Login successful' })
+  @ApiOkResponse({ description: 'Login successful', type: LoginResponseDto })
   @ApiBadRequestResponse({
     description: 'Username and password must be string',
   })
