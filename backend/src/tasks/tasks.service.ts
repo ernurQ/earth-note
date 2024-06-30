@@ -23,10 +23,6 @@ export class TasksService {
       userId,
     )
     const newTask = this.tasksRepository.create({ ...createTaskDto, project })
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { project: _unused, ...result } =
-      await this.tasksRepository.save(newTask)
-    return result
+    return await this.tasksRepository.save(newTask)
   }
 }
