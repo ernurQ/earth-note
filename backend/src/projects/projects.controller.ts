@@ -20,14 +20,10 @@ export class ProjectsController {
     @Req() req: JwtRequest,
     @Body() createProjectDto: CreateProjectDto,
   ) {
-    // TODO: delete userId from response
-    // 	{
-    // 		"userId": "fcd3c5e1-0514-403a-a46f-718cb3c3fbbe",
-    // 		"title": "first",
-    // 		"description": "hello world 11111111111111111111111",
-    // 		"id": 4,
-    // 		"createdAt": "2024-06-24T10:52:21.216Z"
-    // }
-    return this.projectsService.createProject(req.user.id, createProjectDto)
+    const newProject = await this.projectsService.createProject(
+      req.user.id,
+      createProjectDto,
+    )
+    return newProject
   }
 }

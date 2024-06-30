@@ -1,5 +1,6 @@
 import { Task } from '@Tasks/entities'
 import { User } from '@Users/entities'
+import { Expose } from 'class-transformer'
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +12,7 @@ import {
 
 @Entity('projects')
 export class Project {
+  @Expose()
   @PrimaryGeneratedColumn()
   id: string
 
@@ -20,12 +22,15 @@ export class Project {
   @Column()
   userId: string
 
+  @Expose()
   @Column()
   title: string
 
+  @Expose()
   @Column({ type: 'text' })
   description: string
 
+  @Expose()
   @CreateDateColumn()
   createdAt: Date
 

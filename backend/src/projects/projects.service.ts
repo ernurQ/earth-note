@@ -33,9 +33,6 @@ export class ProjectsService {
       ...createProjectDto,
       user,
     })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { user: _unused, ...result } =
-      await this.projectsRepository.save(newProject)
-    return result
+    return await this.projectsRepository.save(newProject)
   }
 }
