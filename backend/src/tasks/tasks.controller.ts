@@ -15,7 +15,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateTaskDto } from '@Tasks/dto'
+import { CreateTaskDto, GetTasksQueryDto } from '@Tasks/dto'
 import { Task } from '@Tasks/entities'
 import { TasksService } from '@Tasks/tasks.service'
 
@@ -27,8 +27,8 @@ export class TasksController {
   @ApiOkResponse({ description: 'Get all tasks', type: [Task] })
   @UseGuards(JwtAuthGuard)
   @Get('')
-  async getTasks(@Query('projectId') projectId: string) {
-    return this.tasksService.getTasksByProjectId(projectId)
+  async getTasks(@Query() query: GetTasksQueryDto) {
+    return this.tasksService.getTasksByProjectId(query.projectId)
   }
 
   @ApiBody({ type: CreateTaskDto })
