@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { Task } from '@Tasks/entities'
 import { User } from '@Users/entities'
 import { Expose } from 'class-transformer'
@@ -12,6 +13,7 @@ import {
 
 @Entity('projects')
 export class Project {
+  @ApiProperty()
   @Expose()
   @PrimaryGeneratedColumn()
   id: string
@@ -22,14 +24,17 @@ export class Project {
   @Column()
   userId: string
 
+  @ApiProperty()
   @Expose()
   @Column()
   title: string
 
+  @ApiProperty()
   @Expose()
   @Column({ type: 'text' })
   description: string
 
+  @ApiProperty()
   @Expose()
   @CreateDateColumn()
   createdAt: Date
