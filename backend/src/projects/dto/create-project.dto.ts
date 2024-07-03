@@ -1,4 +1,12 @@
-import { Project } from '@Projects/entities'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsString } from 'class-validator'
 
-export interface CreateProjectDto
-  extends Omit<Project, 'id' | 'user' | 'createdAt' | 'tasks'> {}
+export class CreateProjectDto {
+  @ApiProperty()
+  @IsString()
+  title: string
+
+  @ApiProperty()
+  @IsString()
+  description: string
+}

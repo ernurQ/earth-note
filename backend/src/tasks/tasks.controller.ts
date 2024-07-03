@@ -9,20 +9,30 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { CreateTaskDto } from '@Tasks/dto'
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger'
+import { CreateTaskDto, GetTasksQueryDto } from '@Tasks/dto'
+import { Task } from '@Tasks/entities'
 import { TasksService } from '@Tasks/tasks.service'
 
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
+  @ApiOkResponse({ description: 'Get all tasks', type: [Task] })
   @UseGuards(JwtAuthGuard)
   @Get('')
-  async getTasks(@Query('projectId') projectId: string) {
-    console.log('work')
-    return this.tasksService.getTasksByProjectId(projectId)
+  async getTasks(@Query() query: GetTasksQueryDto) {
+    return this.tasksService.getTasksByProjectId(query.projectId)
   }
 
+  @ApiBody({ type: CreateTaskDto })
+  @ApiCreatedResponse({ description: 'New task was created', type: Task })
   @UseGuards(JwtAuthGuard)
   @Post('')
   async createTask(
