@@ -1,13 +1,25 @@
 import { JwtRequest } from '@Auth/dto'
 import { JwtAuthGuard } from '@Auth/jwt-auth.guard'
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
+  OmitType,
 } from '@nestjs/swagger'
-import { CreateProjectDto } from '@Projects/dto'
+import { CreateProjectDto, DeleteProjectParamDto } from '@Projects/dto'
 import { Project } from '@Projects/entities'
 import { ProjectsService } from '@Projects/projects.service'
 
@@ -36,5 +48,29 @@ export class ProjectsController {
       createProjectDto,
     )
     return newProject
+  }
+
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'the ID of the project you want to delete',
+  })
+  @ApiOkResponse({
+    description: 'Project was deleted',
+    type: OmitType(Project, ['id'] as const),
+  })
+  @ApiNotFoundResponse({ description: 'Project not found' })
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteProject(
+    @Param() param: DeleteProjectParamDto,
+    @Req() { user }: JwtRequest,
+  ) {
+    const project = await this.projectsService.validateProjectOwnership(
+      param.id,
+      user.id,
+    )
+
+    return await this.projectsService.deleteProject(project)
   }
 }

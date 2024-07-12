@@ -39,6 +39,6 @@ export class Project {
   @CreateDateColumn()
   createdAt: Date
 
-  @OneToMany(() => Task, (task) => task.project)
+  @OneToMany(() => Task, (task) => task.project, { cascade: true })
   tasks?: Task[]
 }

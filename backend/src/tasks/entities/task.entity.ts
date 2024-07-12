@@ -16,7 +16,7 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: string
 
-  @ManyToOne(() => Project, (project) => project.tasks)
+  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
   project?: Project
 
   @Column()
