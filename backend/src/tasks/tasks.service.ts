@@ -22,7 +22,11 @@ export class TasksService {
       createTaskDto.projectId,
       userId,
     )
-    const newTask = this.tasksRepository.create({ ...createTaskDto, project })
+    const newTask = this.tasksRepository.create({
+      ...createTaskDto,
+      project,
+      userId: userId,
+    })
     return await this.tasksRepository.save(newTask)
   }
 }
