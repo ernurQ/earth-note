@@ -3,7 +3,9 @@ import { JwtAuthGuard } from '@Auth/jwt-auth.guard'
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -12,11 +14,14 @@ import {
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
+  OmitType,
 } from '@nestjs/swagger'
 import { ProjectsService } from '@Projects/projects.service'
-import { CreateTaskDto, GetTasksQueryDto } from '@Tasks/dto'
+import { CreateTaskDto, DeleteTaskParamDto, GetTasksQueryDto } from '@Tasks/dto'
 import { Task } from '@Tasks/entities'
 import { TasksService } from '@Tasks/tasks.service'
 
@@ -51,5 +56,29 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
   ) {
     return this.tasksService.createTask(req.user.id, createTaskDto)
+  }
+
+  @ApiNotFoundResponse({ description: 'Task not found' })
+  @ApiOkResponse({
+    description: 'Task was deleted',
+    type: OmitType(Task, ['id'] as const),
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Task ID that you want to delete',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteTask(
+    @Param() deleteTaskParam: DeleteTaskParamDto,
+    @Req() { user }: JwtRequest,
+  ) {
+    const task = await this.tasksService.validateTaskOwnership(
+      deleteTaskParam.id,
+      user.id,
+    )
+
+    return this.tasksService.deleteTask(task)
   }
 }
