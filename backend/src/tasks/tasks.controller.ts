@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -21,7 +22,12 @@ import {
   OmitType,
 } from '@nestjs/swagger'
 import { ProjectsService } from '@Projects/projects.service'
-import { CreateTaskDto, DeleteTaskParamDto, GetTasksQueryDto } from '@Tasks/dto'
+import {
+  CreateTaskDto,
+  DeleteTaskParamDto,
+  GetTasksQueryDto,
+  UpdateTaskDto,
+} from '@Tasks/dto'
 import { Task } from '@Tasks/entities'
 import { TasksService } from '@Tasks/tasks.service'
 
@@ -80,5 +86,24 @@ export class TasksController {
     )
 
     return this.tasksService.deleteTask(task)
+  }
+
+  @ApiOkResponse({ type: Task })
+  @ApiNotFoundResponse({ description: 'Task not found' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Task Id that you want to update',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  async updateTask(
+    @Param('id') taskId: string,
+    @Req() { user }: JwtRequest,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
+    const task = await this.tasksService.validateTaskOwnership(taskId, user.id)
+
+    return this.tasksService.updateTask(task, updateTaskDto)
   }
 }
