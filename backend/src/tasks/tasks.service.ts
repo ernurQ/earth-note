@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ProjectsService } from '@Projects/projects.service'
-import { CreateTaskDto } from '@Tasks/dto'
+import { CreateTaskDto, UpdateTaskDto } from '@Tasks/dto'
 import { Task } from '@Tasks/entities'
 import { Repository } from 'typeorm'
 
@@ -22,7 +22,47 @@ export class TasksService {
       createTaskDto.projectId,
       userId,
     )
-    const newTask = this.tasksRepository.create({ ...createTaskDto, project })
+    const newTask = this.tasksRepository.create({
+      ...createTaskDto,
+      project,
+      userId: userId,
+    })
     return await this.tasksRepository.save(newTask)
+  }
+
+  async validateTaskOwnership(taskId: string, userId: string) {
+    const task = await this.tasksRepository.findOne({
+      where: { id: taskId, userId: userId },
+    })
+    if (!task) {
+      throw new NotFoundException('Task not found')
+    }
+    return task
+  }
+
+  async deleteTask(task: Task) {
+    return this.tasksRepository.remove(task)
+  }
+
+  async updateTask(oldTask: Task, updateTaskDto: UpdateTaskDto) {
+    const task = await this.tasksRepository.preload({
+      ...oldTask,
+      ...updateTaskDto,
+    })
+    if (!task) {
+      throw new NotFoundException('Task not found')
+    }
+    return this.tasksRepository.save(task)
+  }
+
+  async toggleDone(taskId: string) {
+    const task = await this.tasksRepository.findOne({ where: { id: taskId } })
+    if (!task) {
+      throw new NotFoundException('Task not found')
+    }
+
+    task.isDone = !task.isDone
+
+    return await this.tasksRepository.save(task)
   }
 }

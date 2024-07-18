@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Project } from '@Projects/entities'
+import { User } from '@Users/entities'
 import { Expose } from 'class-transformer'
 import {
   Column,
@@ -16,11 +17,17 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: string
 
-  @ManyToOne(() => Project, (project) => project.tasks)
+  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
   project?: Project
 
   @Column()
   projectId: string
+
+  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })
+  user?: User
+
+  @Column()
+  userId: string
 
   @ApiProperty()
   @Expose()

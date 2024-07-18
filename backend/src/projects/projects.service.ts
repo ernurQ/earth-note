@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Project } from '@Projects/entities'
 import { UsersService } from '@Users/users.service'
@@ -34,5 +38,19 @@ export class ProjectsService {
       user,
     })
     return await this.projectsRepository.save(newProject)
+  }
+
+  async validateProjectOwnership(projectId: string, userId: string) {
+    const project = await this.projectsRepository.findOne({
+      where: { id: projectId, userId: userId },
+    })
+    if (!project) {
+      throw new NotFoundException('Project not found')
+    }
+    return project
+  }
+
+  async deleteProject(project: Project) {
+    return this.projectsRepository.remove(project)
   }
 }

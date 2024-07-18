@@ -1,4 +1,5 @@
 import { Project } from '@Projects/entities'
+import { Task } from '@Tasks/entities'
 import bcrypt from 'bcrypt'
 import {
   BeforeInsert,
@@ -22,6 +23,9 @@ export class User {
 
   @OneToMany(() => Project, (project) => project.user, { cascade: true })
   projects: Project[]
+
+  @OneToMany(() => Task, (task) => task.user, { cascade: true })
+  tasks?: Task[]
 
   @BeforeInsert()
   @BeforeUpdate()

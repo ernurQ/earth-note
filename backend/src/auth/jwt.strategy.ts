@@ -1,4 +1,4 @@
-import { UserJwtTokenPayload } from '@Auth/models'
+import { UserJwtTokenPayload, UserJwtValidated } from '@Auth/models'
 import { DatabaseConfig, JwtConfig } from '@Config/configuration'
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigType } from '@nestjs/config'
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: UserJwtTokenPayload) {
-    return { userId: payload.sub, username: payload.username }
+  async validate(payload: UserJwtTokenPayload): Promise<UserJwtValidated> {
+    return { id: payload.sub, username: payload.username }
   }
 }
