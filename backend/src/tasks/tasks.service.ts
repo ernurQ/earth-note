@@ -54,4 +54,15 @@ export class TasksService {
     }
     return this.tasksRepository.save(task)
   }
+
+  async toggleDone(taskId: string) {
+    const task = await this.tasksRepository.findOne({ where: { id: taskId } })
+    if (!task) {
+      throw new NotFoundException('Task not found')
+    }
+
+    task.isDone = !task.isDone
+
+    return await this.tasksRepository.save(task)
+  }
 }

@@ -6,6 +6,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -105,5 +106,15 @@ export class TasksController {
     const task = await this.tasksService.validateTaskOwnership(taskId, user.id)
 
     return this.tasksService.updateTask(task, updateTaskDto)
+  }
+
+  @ApiOkResponse({ type: Task })
+  @ApiNotFoundResponse({ description: 'Task not found' })
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/toggle-done')
+  async toggleDone(@Param('id') taskId: string, @Req() { user }: JwtRequest) {
+    await this.tasksService.validateTaskOwnership(taskId, user.id)
+
+    return this.tasksService.toggleDone(taskId)
   }
 }
